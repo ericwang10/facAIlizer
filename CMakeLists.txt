@@ -9,7 +9,7 @@ project ("facAIlizer")
 find_package( OpenCV REQUIRED )
 include_directories( ${OpenCV_INCLUDE_DIRS} )
 find_package(frugally-deep CONFIG REQUIRED)
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+find_package (Eigen3 3.3 CONFIG REQUIRED)
 find_package(FunctionalPlus CONFIG REQUIRED)
 
 # Add source to this project's executable.

@@ -9,12 +9,8 @@
 #include <opencv2/opencv.hpp>
 
 #include <iostream>
-#include <Eigen/Dense>
-#define FDEEP_FLOAT_TYPE double
-
 #include <fdeep/fdeep.hpp>
 
-using Eigen::MatrixXd;
 
 
 using namespace std;
@@ -24,29 +20,18 @@ CascadeClassifier face_cascade;
 CascadeClassifier eyes_cascade;
 int main(int argc, const char** argv)
 {
-    const auto model = fdeep::load_model("C:/Users/Pinkie/source/repos/facAIlizer/fdeep_model.json", true);
+    //const auto model = fdeep::load_model("C:/Users/Pinkie/source/repos/facAIlizer/fdeep_model.json", true);
 
 
-    MatrixXd m(2, 2);
-    m(0, 0) = 3;
-    m(1, 0) = 2.5;
-    m(0, 1) = -1;
-    m(1, 1) = m(1, 0) + m(0, 1);
-    std::cout << m << std::endl;
-
-    String face_cascade_name = "C:/Users/Pinkie/source/repos/facAIlizer/haarcascade_eye_tree_eyeglasses.xml";
-    String eyes_cascade_name = "C:/Users/Pinkie/source/repos/facAIlizer/haarcascade_frontalface_alt.xml";
+    String face_cascade_name = "C:/Users/Pinkie/source/repos/facAIlizer/haarcascade_frontalface_alt.xml";
     //-- 1. Load the cascades
     if (!face_cascade.load(face_cascade_name))
     {
         cout << "--(!)Error loading face cascade\n";
         return -1;
     };
-    if (!eyes_cascade.load(eyes_cascade_name))
-    {
-        cout << "--(!)Error loading eyes cascade\n";
-        return -1;
-    };
+
+
     VideoCapture capture;
     //-- 2. Read the video stream
     capture.open(0);
@@ -80,20 +65,27 @@ void detectAndDisplay(Mat frame)
     //-- Detect faces
     std::vector<Rect> faces;
     face_cascade.detectMultiScale(frame_gray, faces);
+
+    // To declare finalOutputImg
+    cv::Mat finalOutputImg;
+
+
     for (size_t i = 0; i < faces.size(); i++)
     {
-        Point center(faces[i].x + faces[i].width / 2, faces[i].y + faces[i].height / 2);
-        ellipse(frame, center, Size(faces[i].width / 2, faces[i].height / 2), 0, 0, 360, Scalar(255, 0, 255), 4);
+        int x = faces[i].x;//Getting the initial row value of face rectangle's starting point//
+        int y = faces[i].y;//Getting the initial column value of face rectangle's starting point//
+        int h = y + faces[i].height;//Calculating the height of the rectangle//
+        int w = x + faces[i].width;//Calculating the width of the rectangle//
+        rectangle(frame, Point(x, y), Point(w, h), Scalar(255, 0, 255), 2, 8, 0);//Drawing a rectangle using around the faces//
+
+        finalOutputImg = frame_gray(Rect(x, y, faces[i].x, faces[i].y));
+        cv::resize(finalOutputImg, finalOutputImg, Size(48, 48));
+
+        // To save image in root directory
+        cv::imwrite("sampleImage.png", finalOutputImg);
+
+        //not sure what this code does yet 
         Mat faceROI = frame_gray(faces[i]);
-        //-- In each face, detect eyes
-        std::vector<Rect> eyes;
-        eyes_cascade.detectMultiScale(faceROI, eyes);
-        for (size_t j = 0; j < eyes.size(); j++)
-        {
-            Point eye_center(faces[i].x + eyes[j].x + eyes[j].width / 2, faces[i].y + eyes[j].y + eyes[j].height / 2);
-            int radius = cvRound((eyes[j].width + eyes[j].height) * 0.25);
-            circle(frame, eye_center, radius, Scalar(255, 0, 0), 4);
-        }
     }
     //-- Show what you got
     imshow("Capture - Face detection", frame);
