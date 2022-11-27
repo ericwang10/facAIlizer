@@ -18,10 +18,11 @@ using namespace cv;
 void detectAndDisplay(Mat frame);
 CascadeClassifier face_cascade;
 CascadeClassifier eyes_cascade;
+
+//load model 
+const auto model = fdeep::load_model("C:/Users/Pinkie/source/repos/facAIlizer/fdeep_model.json", true);
 int main(int argc, const char** argv)
 {
-    //const auto model = fdeep::load_model("C:/Users/Pinkie/source/repos/facAIlizer/fdeep_model.json", true);
-
 
     String face_cascade_name = "C:/Users/Pinkie/source/repos/facAIlizer/haarcascade_frontalface_alt.xml";
     //-- 1. Load the cascades
@@ -66,7 +67,7 @@ void detectAndDisplay(Mat frame)
     std::vector<Rect> faces;
     face_cascade.detectMultiScale(frame_gray, faces);
 
-    // To declare finalOutputImg
+    // To declare finalOutputImg, i think don't put it as const since it will continuously change 
     cv::Mat finalOutputImg;
 
 
@@ -83,6 +84,16 @@ void detectAndDisplay(Mat frame)
 
         // To save image in root directory
         cv::imwrite("sampleImage.png", finalOutputImg);
+
+        //LOAD INTO MODEL
+        assert(finalOutputImg.isContinuous());
+        const auto input = fdeep::tensor_from_bytes(finalOutputImg.ptr(),
+            static_cast<std::size_t>(finalOutputImg.rows),
+            static_cast<std::size_t>(finalOutputImg.cols),
+            static_cast<std::size_t>(finalOutputImg.channels()),
+            0.0f, 1.0f);
+        const auto result = model.predict_class({ input });
+        std::cout << result << std::endl;
 
         //not sure what this code does yet 
         Mat faceROI = frame_gray(faces[i]);
