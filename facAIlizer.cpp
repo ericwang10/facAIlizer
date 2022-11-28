@@ -21,6 +21,8 @@ CascadeClassifier eyes_cascade;
 
 //load model 
 const auto model = fdeep::load_model("./fdeep_model5.json", true);
+const auto model_mask = fdeep::load_model("./fdeep_model_mask.json", true);
+
 int main(int argc, const char** argv)
 {
 
@@ -97,6 +99,15 @@ void detectAndDisplay(Mat frame)
             static_cast<std::size_t>(finalOutputImg.cols),
             static_cast<std::size_t>(finalOutputImg.channels()),
             0.0f, 255.0f);
+
+        //MASK DETECTOR
+        const auto result_mask = model_mask.predict_class({ input });
+        std::cout << "Mask is: " << result_mask << endl;
+        if (result_mask == 2) {
+            std::cout << "masked" << endl;
+        }
+
+        //EMOTION DETECTOR
         const auto result = model.predict({ input });
         std::cout << fdeep::show_tensors(result) << std::endl;
         //std::cout << "fdeep input is: " << fdeep::show_tensor(input) << std::endl;
