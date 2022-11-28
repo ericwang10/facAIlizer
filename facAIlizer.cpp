@@ -20,11 +20,11 @@ CascadeClassifier face_cascade;
 CascadeClassifier eyes_cascade;
 
 //load model 
-const auto model = fdeep::load_model("C:/Users/Pinkie/source/repos/facAIlizer/fdeep_model.json", true);
+const auto model = fdeep::load_model("./fdeep_model5.json", true);
 int main(int argc, const char** argv)
 {
 
-    String face_cascade_name = "C:/Users/Pinkie/source/repos/facAIlizer/haarcascade_frontalface_alt.xml";
+    String face_cascade_name = "./haarcascade_frontalface_alt.xml";
     //-- 1. Load the cascades
     if (!face_cascade.load(face_cascade_name))
     {
@@ -47,7 +47,7 @@ int main(int argc, const char** argv)
         if (frame.empty())
         {
             cout << "--(!) No captured frame -- Break!\n";
-            break;
+            //break;
         }
         //-- 3. Apply the classifier to the frame
         detectAndDisplay(frame);
@@ -61,7 +61,8 @@ int main(int argc, const char** argv)
 void detectAndDisplay(Mat frame)
 {
     Mat frame_gray;
-    cvtColor(frame, frame_gray, COLOR_BGR2GRAY);
+    cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
+    cvtColor(frame, frame_gray, COLOR_RGB2GRAY);
     equalizeHist(frame_gray, frame_gray);
     //-- Detect faces
     std::vector<Rect> faces;
@@ -70,6 +71,9 @@ void detectAndDisplay(Mat frame)
     // To declare finalOutputImg, i think don't put it as const since it will continuously change 
     cv::Mat finalOutputImg;
 
+    if (faces.size() == 0) {
+        return;
+    }
 
     for (size_t i = 0; i < faces.size(); i++)
     {
@@ -79,8 +83,9 @@ void detectAndDisplay(Mat frame)
         int w = x + faces[i].width;//Calculating the width of the rectangle//
         rectangle(frame, Point(x, y), Point(w, h), Scalar(255, 0, 255), 2, 8, 0);//Drawing a rectangle using around the faces//
 
-        finalOutputImg = frame_gray(Rect(x, y, faces[i].x, faces[i].y));
+        finalOutputImg = frame_gray(Rect(x, y, faces[i].height, faces[i].width));
         cv::resize(finalOutputImg, finalOutputImg, Size(48, 48));
+        finalOutputImg.convertTo(finalOutputImg, -1, 1, 50);
 
         // To save image in root directory
         cv::imwrite("sampleImage.png", finalOutputImg);
@@ -91,9 +96,13 @@ void detectAndDisplay(Mat frame)
             static_cast<std::size_t>(finalOutputImg.rows),
             static_cast<std::size_t>(finalOutputImg.cols),
             static_cast<std::size_t>(finalOutputImg.channels()),
-            0.0f, 1.0f);
-        const auto result = model.predict_class({ input });
-        std::cout << result << std::endl;
+            0.0f, 255.0f);
+        const auto result = model.predict({ input });
+        std::cout << fdeep::show_tensors(result) << std::endl;
+        //std::cout << "fdeep input is: " << fdeep::show_tensor(input) << std::endl;
+        std::cout << "fdeep input.shape() is: " << fdeep::show_tensor_shape(input.shape()) << std::endl;
+        std::cout << "fdeep result.front().shape() is: " << fdeep::show_tensor_shape(result.front().shape()) << std::endl;
+
 
         //not sure what this code does yet 
         Mat faceROI = frame_gray(faces[i]);
