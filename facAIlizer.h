@@ -1,5 +1,8 @@
-﻿// facAIlizer.h : Include file for standard system include files,
-// or project specific include files.
+/** 
+   @brief facializer.h header file to support facializer.cpp
+ * @author Team 19
+ * @date 2022-11-28
+*/
 
 #ifndef FACAILIZER_H
 #define FACAILIZER_H
@@ -15,6 +18,7 @@
 #include "opencv2/imgproc.hpp"
 #include "opencv2/videoio.hpp"
 
+//#include "Mood.cpp"
 
 class facAIlizer {
 
@@ -30,3 +34,4 @@ private:
 
 
 #endif
+

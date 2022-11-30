@@ -1,4 +1,5 @@
-﻿/*! @brief main facAIlizer class to use models 
+/** @class main facAIlizer class to use models 
+   @brief main facAIlizer class to use models 
  * Detailed description follows here.
  * @author Team 19
  * @date 2022-11-28
@@ -19,12 +20,13 @@ void detectAndDisplay(cv::Mat frame); /** initializes detect and display*/
 CascadeClassifier face_cascade; /**< supports face cascade*/
 CascadeClassifier eyes_cascade; /**< supports eye cascade*/
 
-const auto model = fdeep::load_model("./fdeep_model3.json", true); /**< loads fdeep model for facial expressions*/
+const auto model = fdeep::load_model("./fdeep_model5.json", true); /**< loads fdeep model for facial expressions*/
 const auto model_gender = fdeep::load_model("./fdeep_model_gender.json", true); /**< loads fdeep model for gender*/
+//MoodController moodController; 
 
 string emoteList[6] = {"Angry", "Fearful", "Happy", "Neutral", "Sad", "Surprised"}; /**< emotions that we are working with */
 
-/*!
+/**
    @brief main method initializes xml and video capture, connects rest of code to detect facial expressions
 */
 int main(int argc, const char** argv)
@@ -103,17 +105,11 @@ string evaluate(vector<double> probabilities)
     return emoteList[highestIndex];
 }
 
-/*! @brief detectAndDisplay detects users face and displays the camera capture
+/** @brief detectAndDisplay detects users face and displays the camera capture
     @param frame gives the frame size
 */
 void detectAndDisplay(Mat frame)
 {
-
-    char key = (char)cv::waitKey(30);
-        if (key == '1') {
-            system("afplay Sad_trumpet_Sound_effect.wav");
-        }
-
     /** sets up the display frame color and size*/
     Mat frame_gray;
     cv::cvtColor(frame, frame, cv::COLOR_BGR2RGB);
@@ -203,9 +199,13 @@ void detectAndDisplay(Mat frame)
             cv::putText(frame, emoteList[i], Point(30 + i * sep - 15, 430), cv::FONT_HERSHEY_SIMPLEX, 0.5, color, 2); //COLOR IS SCALAR
         }
 
-        //std::cout << std::endl;
-        //Mat faceROI = frame_gray(faces[i]);
+        //char key = (char)cv::waitKey(30);
+        //if (key == '1') {
+        //    moodController.run(chosen_emotion);
+        //}
+
     }
     /** Show what you got*/
     imshow("Capture - Face detection", frame);
 }
+

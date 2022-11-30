@@ -63,10 +63,10 @@ $(function() {
 </div><!-- top -->
 <div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title"><a class="el" href="classfacAIlizer.html">facAIlizer</a> </div>  </div>
+<div class="title"><a class="el" href="classfacAIlizer.html" title="facializer.h header file to support facializer.cpp">facAIlizer</a> </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>This project was developed by Victor Ren, Scott Ho, Jessica Yang, Eric Wang and Chris Warcholyk. The <a class="el" href="classfacAIlizer.html">facAIlizer</a> is designed to run on any windows, linux, or macOSx based machine.</p>
+<div class="textblock"><p>This project was developed by Victor Ren, Scott Ho, Jessica Yang, Eric Wang and Chris Warcholyk. The <a class="el" href="classfacAIlizer.html" title="facializer.h header file to support facializer.cpp">facAIlizer</a> is designed to run on any windows, linux, or macOSx based machine.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 In order to develop the program, Microsoft Visual Studio Code was used as the IDE of choice.</h1>
 <p>Please ensure that your machine is paired with a functional UVC supported camera in order to avoid hardware related issues, as this program is functionally dependant on camera use. Please ensure that all dependencies are previously installed, including frugally-deep as fdeep, Eigen3 as eigen, FunctionalPlus as fplus, nlohmann_json as json, boost and opencv. Trained fdeep.Models have already been included for use with the program.</p>
@@ -78,7 +78,7 @@ make
 ./facAIlizer
 </pre><h1><a class="anchor" id="autotoc_md3"></a>
 Upon running the program, a display window will open, and the camera will be taken as input and displayed within the window.</h1>
-<p>The <a class="el" href="classfacAIlizer.html">facAIlizer</a> program will detect and draw a rectangle around the faces of users present within the camera's vision, at which point it will begin determining the Gender and Emotion of each face detected in real time, displaying the info on the top of each rectangle &ndash;so that the relevant info is attatched to to the respective user&ndash; and displaying the confidence levels as a bar graph for the first user.</p>
+<p>The <a class="el" href="classfacAIlizer.html" title="facializer.h header file to support facializer.cpp">facAIlizer</a> program will detect and draw a rectangle around the faces of users present within the camera's vision, at which point it will begin determining the Gender and Emotion of each face detected in real time, displaying the info on the top of each rectangle &ndash;so that the relevant info is attatched to to the respective user&ndash; and displaying the confidence levels as a bar graph for the first user.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Reasons for dependency choices:</h1>
 <p>fdeep: for use with loading the models provided and the tensors. eigen: for use with fdeep as a dependency. fplus: for use with fdeep as a dependency json: for use with fdeep and loading the models provided. <br  />
